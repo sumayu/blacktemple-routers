@@ -1,4 +1,4 @@
-import { GuideLayout, CodeBlock, Img, IC, B, NP, A, Note } from "./shared";
+import { GuideLayout, CodeBlock, Img, IC, B, NP, Note } from "./shared";
 import type { StepDef } from "./shared";
 
 const trafficRules = `default: direct

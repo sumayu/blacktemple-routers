@@ -1,4 +1,4 @@
-import { GuideLayout, CodeBlock, Img, IC, B, NP, A, Note } from "./shared";
+import { GuideLayout, CodeBlock, Img, IC, B, NP, A } from "./shared";
 import type { StepDef } from "./shared";
 
 const steps: StepDef[] = [
