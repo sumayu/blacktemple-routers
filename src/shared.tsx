@@ -140,13 +140,11 @@ export interface StepDef {
 // ─── Guide Layout ─────────────────────────────────────────────────────────────────
 
 export function GuideLayout({
-  section,
   title,
   subtitle,
   steps,
   extra,
 }: {
-  section: string;
   title: string;
   subtitle?: string;
   steps: StepDef[];

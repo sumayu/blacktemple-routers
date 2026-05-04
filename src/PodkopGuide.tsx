@@ -55,7 +55,6 @@ const steps: StepDef[] = [
 export default function PodkopGuide() {
   return (
     <GuideLayout
-      section="OpenWrt"
       title="Настройка Vless на роутере с OpenWrt (Podkop)"
       subtitle="Пошаговая настройка скрипта Podkop для выборочного обхода блокировок на уровне роутера."
       steps={steps}

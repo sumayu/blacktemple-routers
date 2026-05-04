@@ -228,7 +228,6 @@ reboot`} />
 export default function OpenWrtInstallGuide() {
   return (
     <GuideLayout
-      section="OpenWrt"
       title="Установка OpenWRT на примере Asus RT-AX53U"
       subtitle="Прошивка роутера, настройка AmneziaWG и установка Ruantiblock для выборочного обхода блокировок."
       steps={steps}

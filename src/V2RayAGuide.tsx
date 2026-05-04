@@ -72,7 +72,6 @@ const steps: StepDef[] = [
 export default function V2RayAGuide() {
   return (
     <GuideLayout
-      section="OpenWrt"
       title="Настройка Vless на роутере с OpenWrt (v2RayA)"
       subtitle="Пошаговая настройка v2RayA с раздельной маршрутизацией трафика."
       steps={steps}

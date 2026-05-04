@@ -242,7 +242,6 @@ function RoutingFiles() {
 export default function KeeneticGuide() {
   return (
     <GuideLayout
-      section="KeeneticOS"
       title="Настройка Amnezia WireGuard на роутере с KeeneticOS"
       subtitle="Пошаговая настройка AWG через CLI Keenetic для обхода блокировок на уровне роутера."
       steps={steps}
