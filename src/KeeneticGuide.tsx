@@ -38,13 +38,24 @@ const steps: StepDef[] = [
   {
     id: 3, title: "Получение конфигурации AWG",
     body: <>
-      <ul className="space-y-2 mb-4 list-none pl-0">
-        <li>Откройте <A href="https://t.me/blacktemple_space_bot">@blacktemple_space_bot</A> — в мини-приложении добавьте устройство (кнопка <B>«+»</B>)</li>
-        <li>Смените протокол: <NP items={["Настройки", "Смена протокола"]} /> → устройство → <B>Amnezia</B></li>
-        <li>Нажмите на файл <IC>.conf</IC> — он придёт в чат с ботом</li>
+      <p style={{ marginBottom: 16 }}>Войдите в личный кабинет — откройте <A href="https://blacktemple.online">blacktemple.online</A> или <A href="https://t.me/blacktemple_space_bot">@blacktemple_space_bot</A> в зависимости от того, где вы пополняли баланс.</p>
+
+      <p style={{ marginBottom: 8 }}>Пролистайте главную страницу вниз до списка ваших активных устройств и выберите нужное:</p>
+      <ul style={{ marginBottom: 16, paddingLeft: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 6 }}>
+        <li>— Если устройство <B>«Основной»</B> свободно (не используется на другом девайсе) — выбираете его</li>
+        <li>— Если занято — нажмите <B>«+»</B> и создайте новое устройство</li>
       </ul>
-      <Img src="/images/k_03_bot_menu.png" alt="Меню бота — устройства" />
-      <Img src="/images/k_04_bot_conf.png" alt="Файл конфигурации в боте" />
+
+      <p style={{ marginBottom: 8 }}>В меню устройства найдите пункт <B>«Протокол»</B>, нажмите на него и выберите <B>AmneziaWG</B> из списка.</p>
+
+      <Note>
+        Сайт и бот — это две разные учётные записи. Если пополняли на сайте — заходите на сайт, если через бота — в бота.
+      </Note>
+
+      <p style={{ marginBottom: 8 }}>После смены протокола нажмите на файл <IC>.conf</IC> — он придёт в чат с ботом или появится для скачивания на сайте.</p>
+
+      <Img src="/images/k_03_bot_menu.png" alt="Меню — список устройств" />
+      <Img src="/images/k_04_bot_conf.png" alt="Файл конфигурации .conf" />
     </>,
   },
   {

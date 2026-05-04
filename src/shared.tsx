@@ -195,12 +195,7 @@ export function GuideLayout({
       {/* ── Page content ── */}
       <div style={{ maxWidth: 900, margin: "0 auto", padding: "48px 24px 80px" }}>
 
-        {/* Breadcrumb */}
-        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 28, fontSize: 13, color: "rgba(255,255,255,0.3)" }}>
-          <span>Главная</span>
-          <ChevronRight size={12} style={{ color: "rgba(255,255,255,0.2)" }} />
-          <span style={{ color: "rgba(255,255,255,0.5)" }}>{section}</span>
-        </div>
+
 
         {/* Title block */}
         <div style={{ marginBottom: 56 }}>
