@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { GuideLayout, CodeBlock, Img, IC, B, NP, A, Note } from "./shared";
 import type { StepDef } from "./shared";
 import { Download } from "lucide-react";
@@ -115,44 +116,112 @@ const steps: StepDef[] = [
   {
     id: 9, title: "Финальная правка",
     body: <>
-      <Img src="/images/k_26_final.jpg" alt="Финальная правка" />
-      <p>В данном поле выставьте значение <B>10</B> — после этого всё заработает корректно.</p>
+      <p className="mb-3">Перейдите в настройки вашего WireGuard-подключения (<NP items={["Интернет", "Другие подключения"]} /> → ваш интерфейс → <B>Изменить</B>).</p>
+      <p className="mb-3">Найдите поле <B>Постоянный keepalive</B> и выставьте значение <B>10</B>.</p>
+      <Note>
+        Это значение keepalive в секундах. Оно удерживает туннель активным и не даёт соединению разрываться при простое. Без этого AWG может периодически отваливаться.
+      </Note>
+      <p>Нажмите <B>Сохранить</B> — после этого соединение будет стабильным.</p>
     </>,
   },
 ];
 
+function DownloadButton({ url, filename, label }: { url: string; filename: string; label: string }) {
+  const [loading, setLoading] = useState(false);
+
+  const handleDownload = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (loading) return;
+    setLoading(true);
+    try {
+      const res = await fetch(url);
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(blobUrl);
+    } catch {
+      // fallback — open in new tab
+      window.open(url, "_blank");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <button
+      onClick={handleDownload}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: 12,
+        padding: "11px 16px",
+        borderRadius: 10,
+        border: `1px solid ${hovered ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.07)"}`,
+        background: hovered ? "rgba(255,255,255,0.05)" : "rgba(255,255,255,0.02)",
+        cursor: loading ? "wait" : "pointer",
+        textAlign: "left",
+        width: "100%",
+        transition: "border-color 0.15s, background 0.15s",
+        opacity: loading ? 0.6 : 1,
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+        <span style={{
+          flexShrink: 0,
+          fontSize: 10,
+          fontFamily: "monospace",
+          color: "rgba(255,255,255,0.3)",
+          background: "rgba(255,255,255,0.06)",
+          padding: "2px 6px",
+          borderRadius: 4,
+        }}>.bat</span>
+        <span style={{
+          fontSize: 13,
+          color: "rgba(255,255,255,0.7)",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+        }}>{label}</span>
+      </div>
+      <Download size={14} style={{ flexShrink: 0, color: loading ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.22)" }} />
+    </button>
+  );
+}
+
 function RoutingFiles() {
   return (
-    <div className="mt-6 pt-6 border-t" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
-      <div className="flex items-center gap-3 mb-2">
-        <Download size={15} style={{ color: "rgba(255,255,255,0.35)" }} />
-        <h2 style={{ fontSize: "1rem", fontWeight: 600, color: "rgba(255,255,255,0.9)" }}>
+    <div style={{ marginTop: 16, paddingTop: 32, borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+        <Download size={15} style={{ color: "rgba(255,255,255,0.35)", flexShrink: 0 }} />
+        <h2 style={{ fontSize: "1rem", fontWeight: 600, color: "rgba(255,255,255,0.9)", margin: 0 }}>
           Файлы для настройки маршрутизации
         </h2>
-        <span className="text-xs px-2 py-0.5 rounded-full border"
-          style={{ color: "rgba(255,255,255,0.35)", borderColor: "rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)", fontWeight: 500 }}>
-          Автоматически
-        </span>
+        <span style={{
+          fontSize: 11, fontWeight: 500,
+          color: "rgba(255,255,255,0.35)",
+          border: "1px solid rgba(255,255,255,0.1)",
+          background: "rgba(255,255,255,0.03)",
+          padding: "2px 8px", borderRadius: 20,
+        }}>Автоматически</span>
       </div>
-      <p className="mb-5 text-sm" style={{ color: "rgba(255,255,255,0.42)", lineHeight: 1.65 }}>
+      <p style={{ fontSize: 13, color: "rgba(255,255,255,0.42)", lineHeight: 1.65, marginBottom: 20 }}>
         Скачайте нужный файл и загрузите через{" "}
         <span style={{ color: "rgba(255,255,255,0.65)" }}>Сетевые правила → Маршрутизация → Загрузить из файла</span>.
         Выберите интерфейс <IC>config</IC>.
       </p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 8 }}>
         {routeFiles.map(f => (
-          <a key={f.label} href={f.url} download={f.filename}
-            className="flex items-center justify-between gap-3 px-4 py-3 rounded-lg border transition-all"
-            style={{ borderColor: "rgba(255,255,255,0.07)", background: "rgba(255,255,255,0.02)", textDecoration: "none" }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)"; e.currentTarget.style.background = "rgba(255,255,255,0.05)"; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.07)"; e.currentTarget.style.background = "rgba(255,255,255,0.02)"; }}>
-            <div className="flex items-center gap-3 min-w-0">
-              <span className="shrink-0 text-[10px] font-mono px-1.5 py-0.5 rounded"
-                style={{ color: "rgba(255,255,255,0.3)", background: "rgba(255,255,255,0.06)" }}>.bat</span>
-              <span className="text-sm truncate" style={{ color: "rgba(255,255,255,0.65)" }}>{f.label}</span>
-            </div>
-            <Download size={14} className="shrink-0" style={{ color: "rgba(255,255,255,0.22)" }} />
-          </a>
+          <DownloadButton key={f.label} url={f.url} filename={f.filename} label={f.label} />
         ))}
       </div>
     </div>
