@@ -42,7 +42,6 @@ const steps: StepDef[] = [
           <span style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", lineHeight: 1.6 }}>{models}</span>
         </div>
       ))}
-      <Note>Не нашли свою модель? Уточните в нашем боте или на сайте Keenetic.</Note>
     </>,
   },
   {
