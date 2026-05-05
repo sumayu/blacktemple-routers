@@ -101,7 +101,9 @@ const steps: StepDef[] = [
       </ul>
       <Img src="/images/xk_components.jpg" alt="Установка компонентов в роутере" />
       <Note>
-        Если «Сервер SSH» уже был установлен ранее — удалите и переустановите заново. Entware использует собственный SSH-сервер, конфликт вызовет проблемы.
+        Встроенный <B>«Сервер SSH»</B> Keenetic работает на порту <IC>22</IC> — он нужен только для первоначальной настройки.
+        После установки Entware появится второй SSH-сервер (Dropbear) на порту <IC>222</IC> — именно через него вы будете работать с XKeen.
+        Конфликта между ними нет, они работают независимо.
       </Note>
     </>,
   },
@@ -142,7 +144,7 @@ const steps: StepDef[] = [
       </p>
       <p style={{ marginBottom: 8 }}>
         <B>Шаг 2.</B> Откройте PuTTY. В поле <B>Host Name</B> введите <IC>192.168.1.1</IC>,
-        порт <IC>22</IC>, тип — <B>SSH</B>. Нажмите <B>Open</B>:
+        порт <IC>222</IC> (не 22!), тип — <B>SSH</B>. Нажмите <B>Open</B>:
       </p>
       <Img src="/images/xk_putty_light.png" alt="Настройка PuTTY" />
       <p style={{ marginBottom: 8 }}>
@@ -150,11 +152,11 @@ const steps: StepDef[] = [
       </p>
       <Img src="/images/xk_putty_accept.png" alt="Окно Accept в PuTTY" />
       <p style={{ marginBottom: 8 }}>
-        <B>Шаг 4.</B> Введите логин и пароль:
+        <B>Шаг 4.</B> Введите логин и пароль Entware:
       </p>
       <CodeBlock code={`login as: root\nroot@192.168.1.1's password: keenetic`} />
       <Note>
-        Символы пароля при вводе не отображаются — это нормально. Просто введите пароль вслепую и нажмите Enter.
+        Символы пароля и звёздочки не отображаются, курсор будет стоять на месте — это нормально в Linux. Просто введите пароль вслепую и нажмите Enter.
         Пароль по умолчанию: <IC>keenetic</IC>
       </Note>
       <p style={{ marginBottom: 8 }}>
@@ -247,6 +249,7 @@ const steps: StepDef[] = [
         В поле <B>«Введите ссылку»</B> вставьте скопированный <IC>vless://...</IC> ключ
         и нажмите <B>«Сгенерировать конфиг»</B>:
       </p>
+      <Img src="/images/xk_config_gen1.png" alt="Генератор конфига XKeen" />
       <p style={{ marginBottom: 8 }}>
         Появится JSON-конфиг. Нажмите <B>«Сохранить в файл»</B> — скачается файл <IC>02_outbounds.json</IC>.
         Либо выделите весь текст (Ctrl+A) и скопируйте (Ctrl+C).
@@ -267,7 +270,7 @@ const steps: StepDef[] = [
           </li>
           <li style={{ display: "flex", gap: 10 }}>
             <span style={{ color: "rgba(255,255,255,0.25)", flexShrink: 0 }}>2.</span>
-            <span>Подключитесь: хост <IC>192.168.1.1</IC>, логин <IC>root</IC>, пароль <IC>keenetic</IC></span>
+            <span>Подключитесь: хост <IC>192.168.1.1</IC>, порт <IC>222</IC>, логин <IC>root</IC>, пароль <IC>keenetic</IC></span>
           </li>
           <li style={{ display: "flex", gap: 10 }}>
             <span style={{ color: "rgba(255,255,255,0.25)", flexShrink: 0 }}>3.</span>
@@ -289,6 +292,7 @@ const steps: StepDef[] = [
       <Note>
         <IC>Ctrl+D</IC> — сигнал «конец ввода». После него файл записывается на диск.
         Если всё прошло без ошибок — командная строка просто вернётся без сообщений. Это нормально.
+        После сохранения обязательно проверьте конфиг: <IC>xkeen -test</IC>. Если ошибок нет — всё супер. Если есть ошибка синтаксиса — конфиг вставился криво, используйте Способ А (WinSCP).
       </Note>
     </>,
   },
