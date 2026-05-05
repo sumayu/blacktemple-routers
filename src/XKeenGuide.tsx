@@ -248,7 +248,6 @@ const steps: StepDef[] = [
         В поле <B>«Введите ссылку»</B> вставьте скопированный <IC>vless://...</IC> ключ
         и нажмите <B>«Сгенерировать конфиг»</B>:
       </p>
-      <Img src="/images/xk_config_gen1.png" alt="Генератор конфига XKeen" />
       <p style={{ marginBottom: 8 }}>
         Появится JSON-конфиг. Нажмите <B>«Сохранить в файл»</B> — скачается файл <IC>02_outbounds.json</IC>.
         Либо выделите весь текст (Ctrl+A) и скопируйте (Ctrl+C).
