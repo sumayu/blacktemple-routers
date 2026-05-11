@@ -244,12 +244,12 @@ const steps: StepDef[] = [
       </p>
       <p style={{ marginBottom: 8 }}>
         <B>Шаг 1</B> Откройте в браузере генератор конфигов:{" "}
-        <A href="https://xkeen.pages.dev">xkeen.pages.dev</A>.
+        <A href="https://corvus-malus.github.io/XKeen-Config-Generator/">XKeen-Config-Generator</A>
         В поле <B>«Введите ссылку»</B> вставьте скопированный <IC>vless://...</IC> ключ
         и нажмите <B>«Сгенерировать конфиг»</B>:
       </p>
       <p style={{ marginBottom: 8 }}>
-        Появится JSON-конфиг. Нажмите <B>«Сохранить в файл»</B> — скачается файл <IC>02_outbounds.json</IC>.
+        Появится JSON-конфиг. Нажмите <B>«Сохранить в файл»</B> — скачается файл <IC>к примеру - 02_outbounds.json</IC>.
         Либо выделите весь текст (Ctrl+A) и скопируйте (Ctrl+C).
       </p>
       <Note>
@@ -272,7 +272,7 @@ const steps: StepDef[] = [
           </li>
           <li style={{ display: "flex", gap: 10 }}>
             <span style={{ color: "rgba(255,255,255,0.25)", flexShrink: 0 }}>3.</span>
-            <span>Перейдите в папку <IC>/opt/etc/xray/</IC> и перетащите туда скачанный <IC>02_outbounds.json</IC></span>
+            <span>Перейдите в папку <IC>/opt/etc/xray/</IC> и перетащите туда скачанный <IC>02_outbounds.json, если у вас другие цифры в начале это нормально</IC></span>
           </li>
         </ul>
       </div>
