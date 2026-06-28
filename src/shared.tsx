@@ -174,22 +174,7 @@ export function GuideLayout({
   return (
     <div style={{ background: "#0a0a0a", color: "white", minHeight: "100vh", fontFamily: "'Inter', system-ui, sans-serif" }}>
 
-      {/* ── Top nav ── */}
-      <div style={{ borderBottom: "1px solid rgba(255,255,255,0.06)", position: "sticky", top: 0, zIndex: 50, background: "#0a0a0a" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", padding: "0 24px", height: 52, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <span style={{ fontSize: 14, fontWeight: 600, letterSpacing: "-0.01em" }}>BlackTemple</span>
-          {/* Step pills — desktop */}
-          <div className="nav-pills hide-on-mobile">
-            {steps.map((s, i) => (
-              <button key={s.id} onClick={() => goto(i)} className={`nav-pill${activeStep === i ? " nav-pill-active" : ""}`}>
-                <span className="nav-pill-num">{String(s.id).padStart(2, "0")}</span>
-                {s.title}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
+ 
       {/* ── Page content ── */}
       <div style={{ maxWidth: 900, margin: "0 auto", padding: "48px 24px 80px" }}>
 
