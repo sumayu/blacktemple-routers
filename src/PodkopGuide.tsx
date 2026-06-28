@@ -413,16 +413,67 @@ const vlessSteps: StepDef[] = [
 export default function RouterGuide() {
   return (
     <div>
-      <GuideLayout
-        title="Настройка VLESS на роутере с OpenWrt (Podkop)"
-        subtitle="VPN с выборочной маршрутизацией. Заблокированные сайты открываются через VPN, российские сервисы работают напрямую."
-        steps={vlessSteps}
-      />
-      <GuideLayout
-        title="Настройка AmneziaWG на роутере с OpenWrt"
-        subtitle="Классический VPN. Весь трафик с роутера идет через VPN."
-        steps={awgSteps}
-      />
+      <div className="max-w-2xl mx-auto px-4 py-12">
+        <h1 className="text-2xl font-bold mb-2">
+          Установка VPN на роутере с OpenWrt
+        </h1>
+        <p className="text-gray-500 mb-8 text-sm">blacktemple.space</p>
+
+        <p className="mb-6">
+          В blacktemple.space доступны два протокола VPN. Они отличаются
+          способом настройки и скоростью работы, поэтому сначала реши какой
+          будешь использовать.
+        </p>
+
+        <div className="space-y-4">
+          <a
+            href="#vless"
+            className="block border rounded-lg p-4 border-blue-400 bg-blue-50 hover:bg-blue-100 transition-colors no-underline"
+          >
+            <p className="font-semibold mb-1">
+              VLESS{" "}
+              <span className="text-blue-600 text-xs font-normal ml-1">
+                рекомендуем
+              </span>
+            </p>
+            <p className="text-sm text-gray-600">
+              VPN с выборочной маршрутизацией. Заблокированные сайты
+              открываются через VPN, российские сервисы работают напрямую.
+              Трафик маскируется под обычный HTTPS - провайдеру и
+              Роскомнадзору сложнее его заблокировать. Работает медленнее чем
+              AmneziaWG, но для большинства пользователей это лучший выбор так
+              как российские сервисы не ломаются.
+            </p>
+          </a>
+          <a
+            href="#amneziawg"
+            className="block border rounded-lg p-4 hover:bg-gray-50 transition-colors no-underline"
+          >
+            <p className="font-semibold mb-1">AmneziaWG</p>
+            <p className="text-sm text-gray-600">
+              Классический VPN. Весь трафик с роутера идет через VPN. Работает
+              значительно быстрее за счет легкого протокола. Но весь трафик
+              идет через зарубежный сервер, поэтому ВК, Госуслуги, Сбер и
+              другие российские сервисы работать не будут.
+            </p>
+          </a>
+        </div>
+      </div>
+
+      <div id="vless">
+        <GuideLayout
+          title="Настройка VLESS на роутере с OpenWrt (Podkop)"
+          subtitle="Пошаговая настройка скрипта Podkop для выборочного обхода блокировок на уровне роутера."
+          steps={vlessSteps}
+        />
+      </div>
+      <div id="amneziawg">
+        <GuideLayout
+          title="Настройка AmneziaWG на роутере с OpenWrt"
+          subtitle="Пошаговая настройка AmneziaWG для полного VPN-туннеля на уровне роутера."
+          steps={awgSteps}
+        />
+      </div>
     </div>
   );
 }
