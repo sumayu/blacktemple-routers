@@ -413,18 +413,16 @@ const vlessSteps: StepDef[] = [
 export default function RouterGuide() {
   return (
     <div>
-      <div className="max-w-2xl mx-auto px-4 py-12">
+      <div className="mx-auto px-16 py-12 max-w-5xl">
         <h1 className="text-2xl font-bold mb-2">
           Установка VPN на роутере с OpenWrt
         </h1>
         <p className="text-gray-500 mb-8 text-sm">blacktemple.space</p>
-
         <p className="mb-6">
           В blacktemple.space доступны два протокола VPN. Они отличаются
           способом настройки и скоростью работы, поэтому сначала реши какой
           будешь использовать.
         </p>
-
         <div className="space-y-4">
           <a
             href="#vless"
@@ -459,7 +457,6 @@ export default function RouterGuide() {
           </a>
         </div>
       </div>
-
       <div id="vless">
         <GuideLayout
           title="Настройка VLESS на роутере с OpenWrt (Podkop)"
