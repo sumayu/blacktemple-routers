@@ -413,28 +413,34 @@ const vlessSteps: StepDef[] = [
 export default function RouterGuide() {
   return (
     <div>
-      <div className="mx-auto px-16 py-12 max-w-5xl">
-        <h1 className="text-2xl font-bold mb-2">
-          Установка VPN на роутере с OpenWrt
-        </h1>
-        <p className="text-gray-500 mb-8 text-sm">blacktemple.space</p>
-        <p className="mb-6">
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: "48px 24px 0" }}>
+        <p style={{ fontSize: "0.95rem", color: "rgba(255,255,255,0.52)", lineHeight: 1.75, marginBottom: 24 }}>
           В blacktemple.space доступны два протокола VPN. Они отличаются
           способом настройки и скоростью работы, поэтому сначала реши какой
           будешь использовать.
         </p>
-        <div className="space-y-4">
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 0 }}>
           <a
             href="#vless"
-            className="block border rounded-lg p-4 border-blue-400 bg-blue-50 hover:bg-blue-100 transition-colors no-underline"
+            style={{
+              display: "block",
+              border: "1px solid rgba(96,165,250,0.4)",
+              borderRadius: 10,
+              padding: "14px 18px",
+              background: "rgba(96,165,250,0.06)",
+              textDecoration: "none",
+              transition: "background 0.15s",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = "rgba(96,165,250,0.12)")}
+            onMouseLeave={e => (e.currentTarget.style.background = "rgba(96,165,250,0.06)")}
           >
-            <p className="font-semibold mb-1">
+            <p style={{ fontWeight: 600, color: "rgba(255,255,255,0.95)", margin: "0 0 4px", fontSize: "0.95rem" }}>
               VLESS{" "}
-              <span className="text-blue-600 text-xs font-normal ml-1">
+              <span style={{ fontSize: 11, fontWeight: 400, color: "rgba(96,165,250,0.9)", marginLeft: 6 }}>
                 рекомендуем
               </span>
             </p>
-            <p className="text-sm text-gray-600">
+            <p style={{ fontSize: "0.875rem", color: "rgba(255,255,255,0.42)", margin: 0, lineHeight: 1.65 }}>
               VPN с выборочной маршрутизацией. Заблокированные сайты
               открываются через VPN, российские сервисы работают напрямую.
               Трафик маскируется под обычный HTTPS - провайдеру и
@@ -445,10 +451,22 @@ export default function RouterGuide() {
           </a>
           <a
             href="#amneziawg"
-            className="block border rounded-lg p-4 hover:bg-gray-50 transition-colors no-underline"
+            style={{
+              display: "block",
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: 10,
+              padding: "14px 18px",
+              background: "rgba(255,255,255,0.025)",
+              textDecoration: "none",
+              transition: "background 0.15s",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.06)")}
+            onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.025)")}
           >
-            <p className="font-semibold mb-1">AmneziaWG</p>
-            <p className="text-sm text-gray-600">
+            <p style={{ fontWeight: 600, color: "rgba(255,255,255,0.95)", margin: "0 0 4px", fontSize: "0.95rem" }}>
+              AmneziaWG
+            </p>
+            <p style={{ fontSize: "0.875rem", color: "rgba(255,255,255,0.42)", margin: 0, lineHeight: 1.65 }}>
               Классический VPN. Весь трафик с роутера идет через VPN. Работает
               значительно быстрее за счет легкого протокола. Но весь трафик
               идет через зарубежный сервер, поэтому ВК, Госуслуги, Сбер и
