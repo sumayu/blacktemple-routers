@@ -1,5 +1,4 @@
-
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import type { ReactNode } from "react";
 import { Copy, Check, ChevronRight } from "lucide-react";
 
@@ -151,26 +150,7 @@ export function GuideLayout({
   steps: StepDef[];
   extra?: ReactNode;
 }) {
-  const [activeStep, setActiveStep] = useState(0);
   const stepRefs = useRef<(HTMLElement | null)[]>([]);
-
-  useEffect(() => {
-    const fn = () => {
-      let cur = 0;
-      stepRefs.current.forEach((el, i) => {
-        if (el && el.getBoundingClientRect().top <= 120) cur = i;
-      });
-      setActiveStep(cur);
-    };
-    window.addEventListener("scroll", fn, { passive: true });
-    return () => window.removeEventListener("scroll", fn);
-  }, []);
-
-  const goto = (i: number) => {
-    const el = stepRefs.current[i];
-    if (!el) return;
-    window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: "smooth" });
-  };
 
   return (
     <div style={{ background: "#0a0a0a", color: "white", fontFamily: "'Inter', system-ui, sans-serif" }}>
