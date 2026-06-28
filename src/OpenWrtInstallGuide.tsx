@@ -1,236 +1,516 @@
 import { GuideLayout, CodeBlock, Img, IC, B, NP, A } from "./shared";
 import type { StepDef } from "./shared";
 
-// All image URLs from the Telegraph article
-// telegra.ph images load fine in browsers — referrerPolicy="no-referrer" is set in shared Img component
-
-const steps: StepDef[] = [
+const sharedSteps0to2: StepDef[] = [
   {
-    id: 1,
-    title: "Подготовка",
+    id: 0,
+    title: "Прошивка OpenWrt на роутер",
     body: (
       <>
         <p className="mb-3">
-          Перед началом подключитесь к роутеру <B>проводом по LAN</B> — Wi-Fi в процессе обновления прошивки может пропасть.
+          Инструкция написана на примере роутера <B>Asus RT-AX53U</B>. У каждого
+          роутера способ прошивки свой - найди инструкцию для своей модели:
+        </p>
+        <p className="mb-1">1. Зайди на <A href="https://openwrt.org/toh/start">openwrt.org/toh/start</A></p>
+        <p className="mb-1">2. Найди свой роутер в таблице по бренду и модели</p>
+        <p className="mb-1">3. Нажми на ссылку в колонке "Device Page"</p>
+        <p className="mb-3">4. На странице найди раздел "Installation" - там будет инструкция для твоей модели</p>
+        <Img src="/images/o_01_compat.png" alt="Таблица совместимых роутеров" />
+        <p className="mb-3">
+          Если в колонке "Device Page" ничего нет - поищи модель через{" "}
+          <A href="https://firmware-selector.openwrt.org">firmware-selector.openwrt.org</A>.
+          Если роутера нет в таблице вообще - он не поддерживается OpenWrt, прошивать его нельзя.
         </p>
         <p className="mb-3">
-          Проверьте совместимость: откройте{" "}
-          <A href="https://openwrt.org/toh/start">openwrt.org/toh/start</A>{" "}
-          и введите бренд/модель устройства. Если модели нет в таблице — инструкция не подходит.
+          Подключись к роутеру по кабелю (LAN). Wi-Fi в процессе прошивки
+          может пропасть - используй только проводное соединение.
         </p>
-        <Img src="/images/o_01_compat.png" alt="Таблица совместимых роутеров RT-AX" />
         <p className="mb-3">
-          Откройте браузер и введите <IC>192.168.1.1</IC> (для Asus также{" "}
-          <IC>http://asusrouter.com/Main_Login.asp</IC>). Логин и пароль: <IC>admin</IC> / <IC>admin</IC>.
+          Открой браузер и перейди по адресу <IC>192.168.50.1</IC> или{" "}
+          <IC>http://asusrouter.com</IC>. Войди с логином и паролем{" "}
+          <IC>admin</IC>.
         </p>
         <Img src="/images/o_02_login.png" alt="Страница входа Asus" />
-        <p className="mb-2">
-          Перейдите в <NP items={["Администрирование", "Система"]} /> — включите SSH по{" "}
-          <B>LAN & WAN</B> и нажмите <B>Применить</B>.
+        <p className="mb-3">
+          Перейди:{" "}
+          <NP items={["Администрирование / Administration", "Система / System"]} />{" "}
+          - включи SSH по "LAN & WAN" - нажми "Применить / Apply".
         </p>
         <Img src="/images/o_03_ssh.png" alt="Включение SSH в Asus" />
+        <p className="mb-3">
+          Установи PuTTY:{" "}
+          <A href="https://putty.org.ru/download">putty.org.ru/download</A>
+        </p>
+        <Img src="/images/o_04_putty_dl.png" alt="Скачивание PuTTY" />
+        <p className="mb-3">
+          Запусти PuTTY - Host Name: <IC>asusrouter.com</IC> - Open - Accept -
+          логин <IC>admin</IC>, пароль <IC>admin</IC>.
+        </p>
+        <Img src="/images/o_07_putty_cfg.png" alt="Настройка PuTTY" />
+        <Img src="/images/o_08_accept.png" alt="Окно безопасности PuTTY" />
+        <Img src="/images/o_09_creds.png" alt="Ввод логина и пароля" />
+        <p className="mb-2">В PuTTY выполни поочередно:</p>
+        <CodeBlock code="wget https://downloads.openwrt.org/releases/25.12.3/targets/ramips/mt7621/openwrt-25.12.3-ramips-mt7621-asus_rt-ax53u-squashfs-factory.bin" />
+        <Img src="/images/o_11_wget.png" alt="Выполнение wget в PuTTY" />
+        <CodeBlock code="mtd-write -i openwrt-25.12.3-ramips-mt7621-asus_rt-ax53u-squashfs-factory.bin -d Kernel" />
+        <Img src="/images/o_13_mtd2.png" alt="Выполнение mtd-write в PuTTY" />
+        <CodeBlock code="reboot" />
+        <Img src="/images/o_14_reboot.png" alt="reboot" />
+        <p className="mt-3">
+          Подожди 1-2 минуты. После этого веб-интерфейс OpenWrt будет доступен
+          по адресу <IC>192.168.1.1</IC>.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 1,
+    title: "Первоначальная настройка OpenWrt",
+    body: (
+      <>
+        <p className="mb-3">
+          Открой <IC>192.168.1.1</IC> в браузере. Логин: <IC>root</IC>, пароль
+          пустой - просто нажми Enter.
+        </p>
+        <Img src="/images/o_15_owrt_login.png" alt="Вход в OpenWRT" />
+        <p className="mb-3">
+          Включи SSH: перейди{" "}
+          <NP items={["System / Система", "Administration / Администрирование"]} />{" "}
+          - вкладка "SSH Access / Доступ по SSH" - Interface / Интерфейс:{" "}
+          <IC>lan</IC> - Save / Сохранить. Без этого PuTTY не подключится.
+        </p>
+        <Img src="/images/o_41_ssh.png" alt="SSH доступ в OpenWRT" />
+        <p className="mb-3">
+          Включи Wi-Fi: перейди{" "}
+          <NP items={["Network / Сеть", "Wireless / Беспроводная сеть"]} /> -
+          нажми "Enable / Включить" напротив своей сети. При необходимости
+          отредактируй название и пароль через "Edit / Изменить".
+        </p>
+        <Img src="/images/o_18_wifi.png" alt="Включение Wi-Fi" />
+        <p className="mb-3">
+          Если провайдер использует PPPoE или статический IP: перейди{" "}
+          <NP items={["Network / Сеть", "Interfaces / Интерфейсы"]} /> - нажми
+          "Edit / Изменить" рядом с WAN - выбери нужный протокол и введи данные
+          от провайдера. При обычном подключении (DHCP) этот шаг пропускай.
+        </p>
+        <Img src="/images/o_16_ifaces.png" alt="Network Interfaces" />
+        <Img src="/images/o_17_proto.png" alt="Выбор протокола" />
+        <p className="mb-3">
+          Если у тебя уже есть роутер провайдера в сети <IC>192.168.1.x</IC> -
+          возникнет конфликт адресов. Смени адрес OpenWrt роутера:{" "}
+          <NP items={["Network / Сеть", "Interfaces / Интерфейсы", "br-lan", "Edit / Изменить"]} />{" "}
+          - поле "IPv4 address" - смени на например <IC>192.168.6.1</IC> -
+          Save / Сохранить - Apply / Применить. После этого используй новый
+          адрес вместо <IC>192.168.1.1</IC>.
+        </p>
       </>
     ),
   },
   {
     id: 2,
-    title: "Установка PuTTY",
+    title: "Подключение по SSH через PuTTY",
     body: (
       <>
         <p className="mb-3">
-          Скачайте PuTTY с{" "}
-          <A href="https://putty.org.ru/download">putty.org.ru/download</A>{" "}
-          и установите, нажимая «Далее», ничего не меняя. По завершению — «Finish».
+          Перед началом выключи VPN на своем компьютере если он включен.
         </p>
-        <Img src="/images/o_04_putty_dl.png" alt="Скачивание PuTTY" />
-        <Img src="/images/o_05_putty_inst.png" alt="Установка PuTTY" />
-        <p className="mb-3">Запустите PuTTY и настройте подключение:</p>
-        <Img src="/images/o_06_putty_run.png" alt="Запуск PuTTY" />
-        <Img src="/images/o_07_putty_cfg.png" alt="Настройка PuTTY — вводим asusrouter.com" />
-        <p className="mb-2">
-          Нажмите <B>Open</B>, затем <B>Accept</B> в окне безопасности. Введите логин <IC>admin</IC>{" "}
-          и пароль (символы при вводе не отображаются — это нормально).
-        </p>
-        <Img src="/images/o_08_accept.png" alt="Окно безопасности PuTTY" />
-        <Img src="/images/o_09_creds.png" alt="Ввод логина и пароля" />
-      </>
-    ),
-  },
-  {
-    id: 3,
-    title: "Прошивка на OpenWRT",
-    body: (
-      <>
         <p className="mb-3">
-          Откройте страницу роутера на openwrt.org, например для RT-AX53U:{" "}
-          <A href="https://openwrt.org/toh/asus/rt-ax53u">openwrt.org/toh/asus/rt-ax53u</A>.
-          Прокрутите вниз, скопируйте команду <IC>wget</IC> и вставьте в PuTTY правой кнопкой мыши.
+          Запусти PuTTY - Host Name: <IC>192.168.1.1</IC> (или твой новый
+          адрес если менял) - Open - Accept - логин <IC>root</IC>, пароль
+          пустой (просто нажми Enter).
         </p>
-        <Img src="/images/o_10_owrt_page.png" alt="Страница OpenWRT — команда wget" />
-        <Img src="/images/o_11_wget.png" alt="Выполнение wget в PuTTY" />
         <p className="mb-3">
-          Дождитесь загрузки файла. Затем скопируйте вторую команду <IC>mtd-write</IC> (до значения <IC>-r</IC>):
+          При вводе пароля символы не отображаются - это нормально.
         </p>
-        <Img src="/images/o_12_mtd1.png" alt="Команда mtd-write на сайте" />
-        <Img src="/images/o_13_mtd2.png" alt="Выполнение mtd-write в PuTTY" />
-        <p className="mb-2">Введите <IC>reboot</IC> для перезагрузки:</p>
-        <Img src="/images/o_14_reboot.png" alt="reboot" />
-      </>
-    ),
-  },
-  {
-    id: 4,
-    title: "Первичная настройка OpenWRT",
-    body: (
-      <>
-        <p className="mb-3">
-          Войдите в веб-интерфейс OpenWRT по адресу <IC>192.168.1.1</IC> через LAN-кабель.
-          Логин: <IC>root</IC>, пароль — пустой (или ранее установленный).
+        <Img src="/images/o_42_putty2.png" alt="PuTTY подключение к роутеру" />
+        <p className="mb-2">Проверь что роутер видит интернет:</p>
+        <CodeBlock code="ping vk.com" />
+        <p className="mt-2 mb-0">
+          Если пинг идет - нажми <IC>Ctrl+C</IC> и продолжай.
         </p>
-        <Img src="/images/o_15_owrt_login.png" alt="Вход в OpenWRT" />
-        <p className="mb-3">
-          Перейдите в <NP items={["Network", "Interfaces"]} /> — настройте WAN под вашего провайдера, нажмите <B>Edit</B>.
-        </p>
-        <Img src="/images/o_16_ifaces.png" alt="Network Interfaces" />
-        <Img src="/images/o_17_proto.png" alt="Выбор протокола" />
-        <p className="mb-3">Включите Wi-Fi кнопкой <B>Enable</B>, при необходимости отредактируйте через <B>Edit</B>.</p>
-        <Img src="/images/o_18_wifi.png" alt="Включение Wi-Fi" />
-        <p className="mb-3">
-          <B>Русификация:</B> перейдите в <NP items={["System", "Software"]} />, нажмите <B>Update lists</B>, затем <B>Dismiss</B>.
-          В поле Filter введите <IC>luci-i18n-base-ru</IC> и нажмите <B>Install</B>.
-        </p>
-        <Img src="/images/o_19_sw.png" alt="System — Software" />
-        <Img src="/images/o_20_update.png" alt="Update lists" />
-        <Img src="/images/o_21_filter.png" alt="Поиск luci-i18n-base-ru" />
-        <Img src="/images/o_22_install.png" alt="Install" />
-      </>
-    ),
-  },
-  {
-    id: 5,
-    title: "Установка AmneziaWG",
-    body: (
-      <>
-        <p className="mb-3">
-          Скачайте три пакета для вашей модели. Для Asus RT-AX53U / AX1800U:
-        </p>
-        <CodeBlock
-          code={`https://github.com/Slava-Shchipunov/awg-openwrt/releases/download/v23.05.4/amneziawg-tools_v23.05.4_mipsel_24kc_ramips_mt7621.ipk\nhttps://github.com/Slava-Shchipunov/awg-openwrt/releases/download/v23.05.4/kmod-amneziawg_v23.05.4_mipsel_24kc_ramips_mt7621.ipk\nhttps://github.com/Slava-Shchipunov/awg-openwrt/releases/download/v23.05.4/luci-app-amneziawg_v23.05.4_mipsel_24kc_ramips_mt7621.ipk`}
-        />
-        <p className="mb-3">
-          Перейдите в <NP items={["Система", "Менеджер пакетов"]} />, нажмите <B>Загрузить пакет</B>{" "}
-          и установите все три файла поочерёдно.
-        </p>
-        <Img src="/images/o_23_pkgmgr.png" alt="Менеджер пакетов" />
-        <Img src="/images/o_24_upload.png" alt="Загрузить пакет" />
-        <Img src="/images/o_25_ipk1.png" alt="amneziawg-tools" />
-        <Img src="/images/o_26_ipk2.png" alt="kmod-amneziawg" />
-        <p className="mb-3">
-          Перейдите в <NP items={["Система", "Перезагрузка"]} /> и нажмите <B>Выполнить перезагрузку</B>.
-        </p>
-        <Img src="/images/o_27_reboot2.png" alt="Перезагрузка" />
-        <p className="mb-3">
-          В <NP items={["Сеть", "Интерфейс"]} /> добавьте новый интерфейс: имя <IC>Awg0</IC>,
-          протокол — <B>AmneziaWG VPN</B>. Нажмите <B>Создать интерфейс</B>.
-        </p>
-        <Img src="/images/o_28_iface_add.png" alt="Создание интерфейса Awg0" />
-        <p className="mb-3">
-          Скачайте файл <IC>config.conf</IC> из нашего бота. Выберите <B>Загрузка конфигурации</B>
-          и перетащите файл в окно импорта.
-        </p>
-        <Img src="/images/o_29_conf_load.png" alt="Загрузка конфигурации" />
-        <Img src="/images/o_30_conf_import.png" alt="Импорт конфигурации" />
-        <Img src="/images/o_31_conf_drag.png" alt="Перетащить config.conf" />
-        <p className="mb-3">
-          Во вкладке <B>Настройки межсетевого экрана</B> выберите «не определено»,
-          в поле «пользовательский» напишите <IC>Awg0</IC> и нажмите Enter.
-        </p>
-        <Img src="/images/o_32_fw_zone.png" alt="Firewall — Awg0" />
-        <p className="mb-3">
-          Во вкладке <B>AmneziaWG Settings</B> проверьте и при необходимости заполните поля из файла config.conf.
-        </p>
-        <Img src="/images/o_33_awg_set.png" alt="AmneziaWG Settings" />
-        <Img src="/images/o_34_notepad.png" alt="config.conf в Notepad++" />
-        <p className="mb-3">
-          Во вкладке <B>Peers</B> выберите «Импортировать конфигурацию как узел…»,
-          перетащите config.conf и нажмите <B>Сохранить</B>.
-        </p>
-        <Img src="/images/o_35_peers.png" alt="Импорт узла Peer" />
-        <p className="mb-3">
-          Нажмите <B>НЕ ПРИНЯТЫЕ ИЗМЕНЕНИЯ</B>, прокрутите до конца и нажмите <B>Применить</B>.
-        </p>
-        <Img src="/images/o_36_unapplied.png" alt="Неприменённые изменения" />
-        <Img src="/images/o_37_apply.png" alt="Применить" />
-        <p className="mb-3">
-          Перейдите в <NP items={["Сеть", "Межсетевой экран"]} /> — для <IC>Awg0</IC> нажмите <B>Изменить</B>.
-          Проставьте галочки <B>Маскардинг</B> и <B>Ограничение MSS</B>.
-          В поле «Разрешить перенаправление» выберите <B>lan</B> и сохраните.
-        </p>
-        <Img src="/images/o_38_fw.png" alt="Межсетевой экран — Awg0" />
-        <Img src="/images/o_39_fw_rules.png" alt="Правила firewall" />
-        <Img src="/images/o_40_fw_apply.png" alt="Применить изменения firewall" />
-      </>
-    ),
-  },
-  {
-    id: 6,
-    title: "Установка Ruantiblock",
-    body: (
-      <>
-        <p className="mb-3">
-          Перейдите в <NP items={["Система", "Администрирование"]} />, вкладка <B>Доступ по SSH</B>.
-          Интерфейс — <IC>lan</IC>. Проставьте галочки как на скриншоте и нажмите <B>Сохранить</B>.
-        </p>
-        <Img src="/images/o_41_ssh.png" alt="SSH доступ" />
-        <p className="mb-3">
-          Откройте PuTTY, введите <IC>192.168.1.1</IC>. Нажмите <B>Accept</B>.
-          Логин: <IC>root</IC>, пароль — пустой.
-        </p>
-        <Img src="/images/o_42_putty2.png" alt="PuTTY подключение к OpenWRT" />
-        <p className="mb-2">
-          Скопируйте команды и вставьте в PuTTY правой кнопкой мыши. После выполнения роутер перезагрузится:
-        </p>
-        <CodeBlock code={`opkg update
-opkg --force-overwrite install dnsmasq-full
-wget --no-check-certificate -O /tmp/ruantiblock_1.5.0-2_all.ipk https://raw.githubusercontent.com/gSpotx2f/packages-openwrt/master/current/ruantiblock_1.5.0-2_all.ipk
-opkg install /tmp/ruantiblock_1.5.0-2_all.ipk
-rm /tmp/ruantiblock_1.5.0-2_all.ipk
-wget --no-check-certificate -O /tmp/luci-app-ruantiblock_1.5.0-r2_all.ipk https://raw.githubusercontent.com/gSpotx2f/packages-openwrt/master/current/luci-app-ruantiblock_1.5.0-r2_all.ipk
-opkg install /tmp/luci-app-ruantiblock_1.5.0-r2_all.ipk
-wget --no-check-certificate -O /tmp/luci-i18n-ruantiblock-ru_1.5.0-r2_all.ipk https://raw.githubusercontent.com/gSpotx2f/packages-openwrt/master/current/luci-i18n-ruantiblock-ru_1.5.0-r2_all.ipk
-opkg install /tmp/luci-i18n-ruantiblock-ru_1.5.0-r2_all.ipk
-rm /tmp/luci-app-ruantiblock_1.5.0-r2_all.ipk /tmp/luci-i18n-ruantiblock-ru_1.5.0-r2_all.ipk
-rm -f /tmp/luci-modulecache/* /tmp/luci-indexcache*
-/etc/init.d/rpcd restart
-/etc/init.d/uhttpd restart
-reboot`} />
-        <Img src="/images/o_43_paste.png" alt="PuTTY — вставка команд" />
-        <p className="mb-3">
-          После перезагрузки перейдите в{" "}
-          <NP items={["Службы", "RuantiBlock", "Настройки", "Основные настройки"]} />.
-          В поле <B>Режим прокси</B> выберите <B>VPN</B>.
-        </p>
-        <Img src="/images/o_44_ruanti_vpn.png" alt="RuantiBlock — Режим VPN" />
-        <p className="mb-3">
-          В поле <B>VPN-интерфейс</B> выберите <IC>Awg0</IC> и нажмите <B>Сохранить</B>.
-        </p>
-        <Img src="/images/o_45_ruanti_if.png" alt="Выбор интерфейса Awg0" />
-        <p className="mb-3">
-          Перейдите в <NP items={["Система", "Перезагрузка"]} /> и перезагрузите роутер.
-        </p>
-        <Img src="/images/o_46_reboot3.png" alt="Перезагрузка" />
-        <p>Через несколько минут поднимется VPN-соединение. Настройка завершена.</p>
       </>
     ),
   },
 ];
 
-export default function OpenWrtInstallGuide() {
+const awgSteps: StepDef[] = [
+  ...sharedSteps0to2,
+  {
+    id: 3,
+    title: "Установка AmneziaWG",
+    body: (
+      <>
+        <p className="mb-2">В PuTTY выполни:</p>
+        <CodeBlock code="sh <(wget -O - https://raw.githubusercontent.com/Slava-Shchipunov/awg-openwrt/refs/heads/master/amneziawg-install.sh)" />
+        <p className="mb-3 mt-3">
+          Если ошибка <IC>connecting to 2606:...</IC> - выполни с
+          принудительным IPv4:
+        </p>
+        <CodeBlock code="sh <(wget -4 -O - https://raw.githubusercontent.com/Slava-Shchipunov/awg-openwrt/refs/heads/master/amneziawg-install.sh)" />
+        <p className="mb-3 mt-3">
+          Если скрипт не скачивается (GitHub заблокирован) - сначала выполни:
+        </p>
+        <CodeBlock code={`printf "#github\\n185.199.109.133 raw.githubusercontent.com\\n185.199.108.133 raw.githubusercontent.com\\n" >> /etc/hosts && /etc/init.d/dnsmasq restart`} />
+        <p className="mb-3 mt-3">
+          Затем повтори команду установки. Когда скрипт спросит{" "}
+          <IC>Do you want to configure the AmneziaWG interface?</IC> - введи{" "}
+          <IC>n</IC>.
+        </p>
+        <p className="mb-2">После завершения перезагрузи роутер:</p>
+        <CodeBlock code="reboot" />
+      </>
+    ),
+  },
+  {
+    id: 4,
+    title: "Получение конфига AmneziaWG",
+    body: (
+      <>
+        <p className="mb-3">
+          Войди в личный кабинет на{" "}
+          <A href="https://blacktemple.online">blacktemple.online</A> или через{" "}
+          <A href="https://t.me/blacktemple_space_bot">@blacktemple_space_bot</A>
+          .
+        </p>
+        <p className="mb-3">
+          Если устройство "Основной" свободно - выбери его. Если занято - нажми
+          "+" и создай новое устройство для роутера.
+        </p>
+        <p>
+          В меню устройства перейди в раздел "Протокол" - выбери{" "}
+          <B>AmneziaWG</B> - нажми "Скачать конфиг". Получишь файл{" "}
+          <IC>config.conf</IC> - он понадобится в следующем шаге.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 5,
+    title: "Создание VPN-интерфейса",
+    body: (
+      <>
+        <p className="mb-3">
+          Открой веб-интерфейс -{" "}
+          <NP items={["Network / Сеть", "Interfaces / Интерфейсы"]} /> - нажми
+          "Add new interface / Добавить новый интерфейс".
+        </p>
+        <p className="mb-1">
+          Название: <IC>awg0</IC>
+        </p>
+        <p className="mb-3">
+          Протокол: <IC>AmneziaWG VPN</IC> - нажми "Create interface / Создать
+          интерфейс".
+        </p>
+        <p className="mb-3">
+          Если <IC>AmneziaWG VPN</IC> нет в списке - перезагрузи роутер через{" "}
+          <NP items={["System / Система", "Reboot / Перезагрузка"]} />.
+        </p>
+        <p className="mb-3">
+          Нажми "Load configuration / Загрузка конфигурации" - перетащи файл{" "}
+          <IC>config.conf</IC> - нажми "Import settings / Импорт настроек".
+        </p>
+        <p className="mb-3">
+          Вкладка "Advanced Settings / Дополнительные настройки" - сними
+          галочку <B>"Use default gateway / Использовать шлюз по умолчанию"</B>.
+        </p>
+        <p className="mb-3">
+          Вкладка "Firewall Settings / Настройки межсетевого экрана" - в поле
+          ниже списка зон введи <IC>awg</IC> - нажми Enter.
+        </p>
+        <p className="mb-3">
+          Вкладка "Peers" - нажми "Edit / Изменить" рядом с конфигурацией -
+          включи <B>"Route Allowed IPs"</B> - нажми "Save / Сохранить" дважды.
+        </p>
+        <p className="mb-3">
+          Нажми "Edit / Изменить" рядом с зоной <IC>wan</IC> - вкладка
+          "Advanced Settings / Дополнительные настройки" - поле "Use Gateway
+          Metric" установи <IC>100</IC> - нажми "Save / Сохранить".
+        </p>
+        <p>Нажми "Save & Apply / Сохранить и применить".</p>
+      </>
+    ),
+  },
+  {
+    id: 6,
+    title: "Настройка межсетевого экрана",
+    body: (
+      <>
+        <p className="mb-3">
+          Перейди:{" "}
+          <NP items={["Network / Сеть", "Firewall / Межсетевой экран"]} />.
+        </p>
+        <p className="mb-3">
+          Нажми "Edit / Изменить" рядом с зоной <IC>lan</IC> - в поле
+          "Allow forward to destination zones / Разрешить перенаправление в
+          зоны назначения" выбери <IC>awg</IC> - нажми "Save / Сохранить".
+        </p>
+        <p className="mb-3">
+          Нажми "Edit / Изменить" рядом с зоной <IC>awg</IC> - включи галочки{" "}
+          <B>"Masquerading / Маскардинг"</B> и{" "}
+          <B>"MSS Clamping / Ограничение MSS"</B> - нажми "Save / Сохранить".
+        </p>
+        <p>Нажми "Save & Apply / Сохранить и применить".</p>
+      </>
+    ),
+  },
+  {
+    id: 7,
+    title: "Синхронизация времени",
+    body: (
+      <>
+        <p className="mb-3">
+          Перейди:{" "}
+          <NP
+            items={[
+              "System / Система",
+              "System / Система",
+              "Time Synchronization / Синхронизация времени",
+            ]}
+          />.
+        </p>
+        <p>
+          Добавь сервер: <IC>194.190.168.1</IC> - нажми "Save & Apply /
+          Сохранить и применить".
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 8,
+    title: "Настройка маршрутизации",
+    body: (
+      <>
+        <p className="mb-3">
+          Перейди:{" "}
+          <NP items={["Network / Сеть", "Routing / Маршрутизация"]} />.
+        </p>
+        <p className="mb-2">Нажми "Add / Добавить" (первый маршрут):</p>
+        <p className="mb-1">
+          Interface / Интерфейс: <IC>wan</IC>
+        </p>
+        <p className="mb-1">
+          Target / Цель: <IC>194.190.168.1/32</IC>
+        </p>
+        <p className="mb-3">
+          Вкладка "Advanced Settings / Дополнительные настройки" - Metric:{" "}
+          <IC>1</IC> - нажми "Save / Сохранить".
+        </p>
+        <p className="mb-2">Нажми "Add / Добавить" (второй маршрут):</p>
+        <p className="mb-1">
+          Interface / Интерфейс: <IC>awg0</IC>
+        </p>
+        <p className="mb-1">
+          Target / Цель: <IC>0.0.0.0/0</IC>
+        </p>
+        <p className="mb-3">
+          Вкладка "Advanced Settings / Дополнительные настройки" - Metric:{" "}
+          <IC>20</IC> - нажми "Save / Сохранить".
+        </p>
+        <p className="mb-3">
+          Нажми "Save & Apply / Сохранить и применить".
+        </p>
+        <p>
+          Перезагрузи роутер:{" "}
+          <NP
+            items={[
+              "System / Система",
+              "Reboot / Перезагрузка",
+              "Perform reboot / Выполнить перезагрузку",
+            ]}
+          />.
+        </p>
+      </>
+    ),
+  },
+];
+
+const vlessSteps: StepDef[] = [
+  ...sharedSteps0to2,
+  {
+    id: 3,
+    title: "Получение VLESS-ключа",
+    body: (
+      <>
+        <p className="mb-3">
+          Войди в личный кабинет на{" "}
+          <A href="https://blacktemple.online">blacktemple.online</A> или через{" "}
+          <A href="https://t.me/blacktemple_space_bot">@blacktemple_space_bot</A>
+          .
+        </p>
+        <p className="mb-3">
+          Если устройство "Основной" свободно - выбери его. Если занято - нажми
+          "+" и создай новое устройство для роутера.
+        </p>
+        <p className="mb-3">
+          В меню устройства перейди в раздел "Протокол" - выбери <B>VLESS</B> -
+          скопируй ссылку-подписку. Это обычная ссылка, не <IC>vless://</IC>.
+        </p>
+        <p>
+          Вставь её в адресную строку браузера и нажми Enter. Откроется
+          страница User Information с тремя ключами вида <IC>vless://...</IC>.
+          Нажми Copy напротив любого из них.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 4,
+    title: "Установка Podkop",
+    body: (
+      <>
+        <p className="mb-3">
+          Требования: OpenWrt 24.10 или новее, минимум 20 МБ свободного места.
+        </p>
+        <p className="mb-2">В PuTTY выполни:</p>
+        <CodeBlock code="sh <(wget -O - https://raw.githubusercontent.com/itdoginfo/podkop/refs/heads/main/install.sh)" />
+        <p className="mb-3 mt-3">
+          Если скрипт не скачивается (GitHub заблокирован) - сначала выполни:
+        </p>
+        <CodeBlock code={`printf "#github\\n185.199.109.133 raw.githubusercontent.com\\n185.199.108.133 raw.githubusercontent.com\\n" >> /etc/hosts && /etc/init.d/dnsmasq restart`} />
+        <p className="mb-3 mt-3">
+          Затем повтори команду установки. Если ранее был установлен getdomains
+          или https-dns-proxy - скрипт предложит их удалить, соглашайся.
+        </p>
+        <p className="mb-2">После установки:</p>
+        <CodeBlock code="reboot" />
+        <Img src="/images/o_43_paste.png" alt="Вставка команды в PuTTY" />
+      </>
+    ),
+  },
+  {
+    id: 5,
+    title: "Настройка VLESS в Podkop",
+    body: (
+      <>
+        <p className="mb-3">
+          Открой веб-интерфейс -{" "}
+          <NP items={["Services / Службы", "Podkop"]} /> - выбери протокол{" "}
+          <B>VLESS</B> - вставь ключ <IC>vless://...</IC> в поле "Proxy
+          configuration URL / URL конфигурации прокси" - Save & Apply /
+          Сохранить и применить - перезагрузи роутер.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 6,
+    title: "Добавление сервисов",
+    body: (
+      <>
+        <p className="mb-3">
+          Если какой-то сервис не работает через VPN (например Telegram) -
+          добавь его вручную.
+        </p>
+        <p>
+          <NP
+            items={[
+              "Services / Службы",
+              "Podkop",
+              "Sections / Секции",
+              "Add section / Добавить секцию",
+            ]}
+          />{" "}
+          - в поле "Community list" выбери нужный сервис - Save / Сохранить -
+          Apply / Применить.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 7,
+    title: "Проверка работы",
+    body: (
+      <>
+        <p>
+          Нажми "Save & Apply / Сохранить и применить" и перейди в{" "}
+          <B>Diagnostics / Диагностика</B> - статус подключения должен быть
+          активным. Если что-то не работает:{" "}
+          <NP items={["Services / Службы", "Podkop", "Diagnostics / Диагностика"]} />.
+        </p>
+      </>
+    ),
+  },
+];
+
+export default function RouterGuide() {
   return (
-    <GuideLayout
-      title="Установка OpenWRT на примере Asus RT-AX53U"
-      subtitle="Прошивка роутера, настройка AmneziaWG и установка Ruantiblock для выборочного обхода блокировок."
-      steps={steps}
-    />
+    <div>
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: "48px 24px 0" }}>
+        <p style={{ fontSize: "0.95rem", color: "rgba(255,255,255,0.52)", lineHeight: 1.75, marginBottom: 24 }}>
+          В blacktemple.space доступны два протокола VPN. Они отличаются
+          способом настройки и скоростью работы, поэтому сначала реши какой
+          будешь использовать.
+        </p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 0 }}>
+          <a
+            href="#vless"
+            style={{
+              display: "block",
+              border: "1px solid rgba(96,165,250,0.4)",
+              borderRadius: 10,
+              padding: "14px 18px",
+              background: "rgba(96,165,250,0.06)",
+              textDecoration: "none",
+              transition: "background 0.15s",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = "rgba(96,165,250,0.12)")}
+            onMouseLeave={e => (e.currentTarget.style.background = "rgba(96,165,250,0.06)")}
+          >
+            <p style={{ fontWeight: 600, color: "rgba(255,255,255,0.95)", margin: "0 0 4px", fontSize: "0.95rem" }}>
+              VLESS{" "}
+              <span style={{ fontSize: 11, fontWeight: 400, color: "rgba(96,165,250,0.9)", marginLeft: 6 }}>
+                рекомендуем
+              </span>
+            </p>
+            <p style={{ fontSize: "0.875rem", color: "rgba(255,255,255,0.42)", margin: 0, lineHeight: 1.65 }}>
+              VPN с выборочной маршрутизацией. Заблокированные сайты
+              открываются через VPN, российские сервисы работают напрямую.
+              Трафик маскируется под обычный HTTPS - провайдеру и
+              Роскомнадзору сложнее его заблокировать. Работает медленнее чем
+              AmneziaWG, но для большинства пользователей это лучший выбор так
+              как российские сервисы не ломаются.
+            </p>
+          </a>
+          <a
+            href="#amneziawg"
+            style={{
+              display: "block",
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: 10,
+              padding: "14px 18px",
+              background: "rgba(255,255,255,0.025)",
+              textDecoration: "none",
+              transition: "background 0.15s",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.06)")}
+            onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.025)")}
+          >
+            <p style={{ fontWeight: 600, color: "rgba(255,255,255,0.95)", margin: "0 0 4px", fontSize: "0.95rem" }}>
+              AmneziaWG
+            </p>
+            <p style={{ fontSize: "0.875rem", color: "rgba(255,255,255,0.42)", margin: 0, lineHeight: 1.65 }}>
+              Классический VPN. Весь трафик с роутера идет через VPN. Работает
+              значительно быстрее за счет легкого протокола. Но весь трафик
+              идет через зарубежный сервер, поэтому ВК, Госуслуги, Сбер и
+              другие российские сервисы работать не будут.
+            </p>
+          </a>
+        </div>
+      </div>
+      <div id="vless">
+        <GuideLayout
+          title="Настройка VLESS на роутере с OpenWrt (Podkop)"
+          subtitle="Пошаговая настройка скрипта Podkop для выборочного обхода блокировок на уровне роутера."
+          steps={vlessSteps}
+        />
+      </div>
+      <div id="amneziawg">
+        <GuideLayout
+          title="Настройка AmneziaWG на роутере с OpenWrt"
+          subtitle="Пошаговая настройка AmneziaWG для полного VPN-туннеля на уровне роутера."
+          steps={awgSteps}
+        />
+      </div>
+    </div>
   );
 }
