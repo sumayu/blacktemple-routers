@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
 import OpenWrtInstallGuide from "./OpenWrtInstallGuide";
-import PodkopGuide from "./PodkopGuide";
 import V2RayAGuide from "./V2RayAGuide";
 import KeeneticGuide from "./KeeneticGuide";
 import XKeenGuide from "./XKeenGuide";
 
 const routes: Record<string, React.FC> = {
   "/openwrt":  OpenWrtInstallGuide,
-  "/podkop":   PodkopGuide,
   "/v2raya":   V2RayAGuide,
   "/keenetic": KeeneticGuide,
   "/xkeen":    XKeenGuide,
