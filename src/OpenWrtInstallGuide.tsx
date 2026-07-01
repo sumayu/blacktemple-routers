@@ -432,3 +432,23 @@ const vlessSteps: StepDef[] = [
   },
 ];
 
+export default function RouterGuide() {
+  return (
+    <div>
+      <div id="vless">
+        <GuideLayout
+          title="Настройка VLESS на роутере с OpenWrt (Podkop)"
+          subtitle="Пошаговая настройка скрипта Podkop для выборочного обхода блокировок на уровне роутера."
+          steps={vlessSteps}
+        />
+      </div>
+      <div id="amneziawg">
+        <GuideLayout
+          title="Настройка AmneziaWG на роутере с OpenWrt"
+          subtitle="Пошаговая настройка AmneziaWG для полного VPN-туннеля на уровне роутера."
+          steps={awgSteps}
+        />
+      </div>
+    </div>
+  );
+}
