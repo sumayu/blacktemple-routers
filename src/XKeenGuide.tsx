@@ -272,7 +272,7 @@ const steps: StepDef[] = [
           </li>
           <li style={{ display: "flex", gap: 10 }}>
             <span style={{ color: "rgba(255,255,255,0.25)", flexShrink: 0 }}>3.</span>
-            <span>Перейдите в папку <IC>/opt/etc/xray/configs <<<---- важно именно этот путь))) </IC> и перетащите туда скачанный <IC>02_outbounds.json, если у вас другие цифры в начале это нормально</IC></span>
+            <span>Перейдите в папку <IC>/opt/etc/xray/configs</IC> (важно именно этот путь) и перетащите туда скачанный <IC>02_outbounds.json</IC> — если у вас другие цифры в начале, это нормально</span>
           </li>
         </ul>
       </div>
