@@ -279,7 +279,7 @@ const steps: StepDef[] = [
 
       <div style={{ marginBottom: 8 }}>
         <p style={{ marginBottom: 6, fontSize: 13, color: "rgba(255,255,255,0.6)", fontWeight: 600 }}>Способ Б — через PuTTY (если не хотите скачивать WinSCP):</p>
-        <CodeBlock code="cat > /opt/etc/xray/02_outbounds.json" />
+        <CodeBlock code="cat > /opt/etc/xray/configs/02_outbounds.json" />
         <p style={{ marginBottom: 8 }}>
           Нажмите Enter — курсор перейдёт на новую строку и будет ждать.
           Вставьте JSON <B>правой кнопкой мыши</B>.
@@ -362,6 +362,83 @@ const steps: StepDef[] = [
           </div>
         ))}
       </div>
+    </>,
+  },
+  {
+    id: 14,
+    title: "Установка веб-панели XKeen UI",
+    body: <>
+      <p style={{ marginBottom: 12 }}>
+        XKeen управляется командами в консоли, но есть удобная веб-панель{" "}
+        <B>XKeen UI</B> — через неё можно смотреть статус, редактировать конфиги
+        и логи прямо из браузера, без SSH.
+      </p>
+      <p style={{ marginBottom: 8 }}>
+        В PuTTY выполните команду установки одной строкой:
+      </p>
+      <CodeBlock code="curl https://raw.githubusercontent.com/zxc-rv/XKeen-UI/main/setup.sh | sh" />
+      <p style={{ marginBottom: 8 }}>
+        Скрипт скачает и настроит панель, добавит автозапуск. Установка занимает пару минут.
+      </p>
+      <p style={{ marginBottom: 8 }}>
+        После установки откройте в браузере (в локальной сети роутера):
+      </p>
+      <CodeBlock code="http://192.168.1.1:1000" />
+      <p style={{ marginBottom: 8 }}>
+        Управлять сервисом панели вручную можно командой:
+      </p>
+      <CodeBlock code="/opt/etc/init.d/S99xkeen-ui start|restart|stop|status" />
+      <Note>
+        Панель рассчитана на работу в локальной сети и по умолчанию не защищена паролем.
+        Не открывайте порт <IC>1000</IC> в интернет напрямую — для доступа извне используйте VPN
+        (SSTP/WireGuard) или KeenDNS-субдомен с обязательной авторизацией.
+      </Note>
+    </>,
+  },
+  {
+    id: 15,
+    title: "Настройка маршрутизации через XKeen UI",
+    body: <>
+      <p style={{ marginBottom: 12 }}>
+        За выборочную маршрутизацию трафика в Xray отвечает файл{" "}
+        <IC>05_routing.json</IC> в папке <IC>/opt/etc/xray/configs/</IC>.
+        Именно в нём прописываются правила — какие сайты идут через VPN,
+        а какие напрямую (по доменам, geosite-спискам, IP или портам).
+      </p>
+      <p style={{ marginBottom: 8 }}>
+        В XKeen UI редактировать этот файл можно прямо в браузере, без SSH и WinSCP:
+      </p>
+      <ul style={{ paddingLeft: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 6, marginBottom: 12 }}>
+        <li style={{ display: "flex", gap: 10 }}>
+          <span style={{ color: "rgba(255,255,255,0.25)", flexShrink: 0 }}>1.</span>
+          <span>Откройте панель по адресу <IC>http://192.168.1.1:1000</IC></span>
+        </li>
+        <li style={{ display: "flex", gap: 10 }}>
+          <span style={{ color: "rgba(255,255,255,0.25)", flexShrink: 0 }}>2.</span>
+          <span>Перейдите в раздел редактирования конфигураций Xray — там доступен встроенный
+            редактор с подсветкой синтаксиса (CodeMirror) и проверкой JSON на ошибки</span>
+        </li>
+        <li style={{ display: "flex", gap: 10 }}>
+          <span style={{ color: "rgba(255,255,255,0.25)", flexShrink: 0 }}>3.</span>
+          <span>Откройте <IC>05_routing.json</IC> и добавьте нужные правила
+            (например, домены или geosite-категории, которые должны идти в обход VPN)</span>
+        </li>
+        <li style={{ display: "flex", gap: 10 }}>
+          <span style={{ color: "rgba(255,255,255,0.25)", flexShrink: 0 }}>4.</span>
+          <span>Сохраните — панель проверит синтаксис перед записью на диск</span>
+        </li>
+        <li style={{ display: "flex", gap: 10 }}>
+          <span style={{ color: "rgba(255,255,255,0.25)", flexShrink: 0 }}>5.</span>
+          <span>Перезапустите XKeen (кнопка в панели или команда <IC>xkeen -restart</IC>),
+            чтобы изменения применились</span>
+        </li>
+      </ul>
+      <Note>
+        Точное название пункта меню может немного отличаться в зависимости от версии панели.
+        Если своего файла <IC>05_routing.json</IC> ещё нет — его можно собрать через отдельный
+        генератор правил маршрутизации (ищите «XKeen Routing Generator») и затем вставить
+        результат в редактор панели.
+      </Note>
     </>,
   },
 ];
